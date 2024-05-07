@@ -52,7 +52,6 @@ def guess_period(text: str, max_period: int) -> int:
         for i in range(period):
             total += index_of_coincidence(slices[i])
         ioc = total / period
-        print(ioc)
         if best_ioc is None or ioc > best_ioc:
             best_period = period
             best_ioc = ioc
@@ -66,7 +65,7 @@ if __name__ == "__main__":
         text = f.read()
 
     key_length = guess_period(text, MAX_KEY_LENGTH)
-    print(f"key length: {key_length}")
+    eprint(f"key length: {key_length}")
 
     best_key = ["A"] * key_length
     best_score = ngram.score(decrypt(text, "".join(best_key)))
