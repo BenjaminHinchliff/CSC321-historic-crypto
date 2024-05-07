@@ -1,8 +1,10 @@
+#!/usr/bin/env python3
+
 import sys
 import math
 import random
 
-MAX_EPOCHS = 100_000
+MAX_EPOCHS = 10_000
 
 from ngram import NGramScore
 

@@ -3,7 +3,6 @@
 from collections import Counter
 import random
 import sys
-import matplotlib.pyplot as plt
 
 from ngram import NGramScore, clean_text
 
