@@ -1,12 +1,6 @@
-import re
 import math
 
-ALPHA_REGEX = re.compile(r"[^A-Za-z]+")
-
-
-def clean_text(text: str) -> str:
-    return ALPHA_REGEX.sub("", text).upper()
-
+from text import clean_text
 
 class NGramScore:
     def __init__(self, ngram_path: str) -> None:

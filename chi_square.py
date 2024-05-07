@@ -2,7 +2,8 @@
 
 from collections import Counter
 from typing import Iterable
-import re
+
+from text import clean_text
 
 # English letter frequencies (%)
 LETTER_FREQUENCIES_PERCENT = {
@@ -35,23 +36,6 @@ LETTER_FREQUENCIES_PERCENT = {
 }
 LETTER_FREQUENCIES = {k: v / 100.0 for k, v in LETTER_FREQUENCIES_PERCENT.items()}
 
-def load_bigrams():
-    with open("english_bigrams_1.txt", "r") as f:
-        bigrams = {}
-        for line in f:
-            bigram, count = line.split()
-            bigrams[bigram] = int(count)
-    total = sum(bigrams.values())
-    bigrams = {b: c / total for b, c in bigrams.items()}
-    return bigrams
-
-BIGRAM_FREQUENCIES = load_bigrams()
-
-ALPHA_REGEX = re.compile(r"[^A-Za-z]+")
-def clean_text(text: str) -> str:
-    return ALPHA_REGEX.sub("", text).upper()
-
-
 def chi_squared(Os: Iterable[float], Es: Iterable[float]) -> float:
     return sum((O - E) ** 2 / E for O, E in zip(Os, Es))
 
@@ -63,30 +47,3 @@ def chi_squared_freq(text: str) -> float:
     observed_freq = {k: v / total for k, v in observed_freq.items()}
     expected_freq = [LETTER_FREQUENCIES[k] for k in observed_freq]
     return chi_squared(observed_freq.values(), expected_freq)
-
-
-def chi_squared_bigram_freq(text: str) -> float:
-    text = clean_text(text)
-    observed_freq = Counter(
-        text[i : i + 2]
-        for i in range(len(text) - 2 + 1)
-        if text[i : i + 2] in BIGRAM_FREQUENCIES
-    )
-    observed_freq = {
-        k: observed_freq[k] / len(text) if k in observed_freq else 0.0
-        for k in BIGRAM_FREQUENCIES
-    }
-    return chi_squared(observed_freq.values(), BIGRAM_FREQUENCIES.values())
-
-def chi_squared_bigram_freq(text: str, quadgram_freqs: dict[str, float]) -> float:
-    text = clean_text(text)
-    observed_freq = Counter(
-        text[i : i + 2]
-        for i in range(len(text) - 2 + 1)
-        if text[i : i + 2] in BIGRAM_FREQUENCIES
-    )
-    observed_freq = {
-        k: observed_freq[k] / len(text) if k in observed_freq else 0.0
-        for k in BIGRAM_FREQUENCIES
-    }
-    return chi_squared(observed_freq.values(), BIGRAM_FREQUENCIES.values())
