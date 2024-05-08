@@ -7,6 +7,15 @@ from ngram import NGramScore
 
 
 def rotn(text: str, shift: int) -> str:
+    """
+    Rotate the alphabetic chracters in a given string by a known shift, with wrapping
+
+    text - the input text
+    shift - an integral value to shift the characters by (positive or negative)
+
+    returns - the text shifted by `shift`
+    """
+
     def shift_rel_to(c: str, to: str) -> str:
         return chr(((ord(c) - ord(to) + shift) % 26) + ord(to))
 

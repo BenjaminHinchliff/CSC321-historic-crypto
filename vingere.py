@@ -10,7 +10,15 @@ from ngram import NGramScore, clean_text
 MAX_EPOCHS_TO_IMPROVE = 10
 
 def encrypt(text: str, key: str) -> str:
-    decrypted = ""
+    """
+    Encrypt the source text using the vingere cypher
+
+    text - source text
+    key - key
+
+    returns - encrypted text
+    """
+    encrypted = ""
     i = 0
     for l in text:
         if l.isalpha():
@@ -18,13 +26,21 @@ def encrypt(text: str, key: str) -> str:
             p = ord(l) - off
             k = ord(key[i % len(key)]) - ord("A")
             c = (p + k) % 26
-            decrypted += chr(c + off)
+            encrypted += chr(c + off)
             i += 1
         else:
-            decrypted += l
-    return decrypted
+            encrypted += l
+    return encrypted
 
 def decrypt(text: str, key: str) -> str:
+    """
+    Decrypt the source text using the vingere cypher
+
+    text - source text
+    key - key
+
+    returns - decrypted text
+    """
     decrypted = ""
     i = 0
     for l in text:

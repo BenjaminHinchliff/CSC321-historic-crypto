@@ -16,6 +16,14 @@ def random_letter():
 
 
 def map_letters(src: str, letters_map: dict[str, str]) -> str:
+    """
+    Maps the letters in the source string according to the given mapping
+
+    src - the source string
+    letters_map - a bijective function to map each letter to another in the english alphabet
+
+    returns - the mapped string
+    """
     return "".join(
         (
             letters_map[c]
