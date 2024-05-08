@@ -2,7 +2,10 @@
 
 import sys
 import argparse
-from chi_square import chi_squared_freq
+
+from stderrprint import eprint
+from ngram import NGramScore, clean_text
+
 
 def rotn(text: str, shift: int) -> str:
     def shift_rel_to(c: str, to: str) -> str:
@@ -23,11 +26,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    ngram = NGramScore("english_trigrams.txt")
+
     with open(args.filename) as f:
         src = f.read()
 
-    chi_squareds = [chi_squared_freq(rotn(src, shift)) for shift in range(26)]
-    best_shift = min(range(len(chi_squareds)), key=chi_squareds.__getitem__)
-    print(f"Best Shift: {best_shift} with chi-squared: {chi_squareds[best_shift]:.4f}", file=sys.stderr)
+    chi_squareds = [ngram.score(rotn(src, shift)) for shift in range(26)]
+    best_shift = max(range(len(chi_squareds)), key=chi_squareds.__getitem__)
+    eprint(f"Best Shift: {best_shift} with chi-squared: {chi_squareds[best_shift]:.4f}")
 
     print(rotn(src, best_shift))

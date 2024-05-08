@@ -7,11 +7,8 @@ import argparse
 
 MAX_EPOCHS = 10_000
 
+from stderrprint import eprint
 from ngram import NGramScore
-
-
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
 
 
 def random_letter():

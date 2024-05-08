@@ -2,16 +2,12 @@
 
 from collections import Counter
 import random
-import sys
 import argparse
 
+from stderrprint import eprint
 from ngram import NGramScore, clean_text
 
 MAX_EPOCHS_TO_IMPROVE = 10
-
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-
 
 def decrypt(text: str, key: str) -> str:
     decrypted = ""

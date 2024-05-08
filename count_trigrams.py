@@ -1,7 +1,7 @@
 import re
 from collections import Counter
 
-with open("names.csv", "r") as f:
+with open("names.txt", "r") as f:
     text = f.read()
 
 print("read text in")
