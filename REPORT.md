@@ -1,3 +1,10 @@
+---
+title: "CSC321 Historic Crypto Report"
+author: Benjamin Hinchliff
+date: May 8, 2024
+geometry: margin=0.5cm
+output: pdf_document
+---
 # CSC321 Historic Crypto Report
 
 ## Principles
