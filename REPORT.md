@@ -441,15 +441,15 @@ def decrypt_without_key(text: str) -> str:
 
 ### Caesar
 
-https://asciinema.org/a/p17udVsMgRVDV2La0g2l8cIoo
+[![asciicast](https://asciinema.org/a/p17udVsMgRVDV2La0g2l8cIoo.svg)](https://asciinema.org/a/p17udVsMgRVDV2La0g2l8cIoo)
 
 ### Monoalphabetic
 
-https://asciinema.org/a/OcJW10GARQ7HyMhCuOTXNqJri
+[![asciicast](https://asciinema.org/a/OcJW10GARQ7HyMhCuOTXNqJri.svg)](https://asciinema.org/a/OcJW10GARQ7HyMhCuOTXNqJri)
 
 ### Vigenère
 
-https://asciinema.org/a/YrfzodDkgnKNC6i5A1SJDL11T
+[![asciicast](https://asciinema.org/a/YrfzodDkgnKNC6i5A1SJDL11T.svg)](https://asciinema.org/a/YrfzodDkgnKNC6i5A1SJDL11T)
 
 ## Questions 
 
