@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys
+import argparse
 from chi_square import chi_squared_freq
 
 def rotn(text: str, shift: int) -> str:
@@ -13,9 +15,15 @@ def rotn(text: str, shift: int) -> str:
 
 
 if __name__ == "__main__":
-    import sys
+    parser = argparse.ArgumentParser(
+        prog="caesar-freq",
+        description="attempts to decrypt a caesar cipher in a given file",
+    )
+    parser.add_argument("filename")
 
-    with open(sys.argv[1]) as f:
+    args = parser.parse_args()
+
+    with open(args.filename) as f:
         src = f.read()
 
     chi_squareds = [chi_squared_freq(rotn(src, shift)) for shift in range(26)]

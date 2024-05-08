@@ -3,13 +3,16 @@
 import sys
 import math
 import random
+import argparse
 
 MAX_EPOCHS = 10_000
 
 from ngram import NGramScore
 
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
+
 
 def random_letter():
     return chr(random.randrange(ord("A"), ord("Z") + 1))
@@ -39,9 +42,17 @@ def randomly_swap_letters(letters_map: dict[str, str]):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="monoalphabetic",
+        description="attempts to decrypt a monoalphabetic cipher in a given file",
+    )
+    parser.add_argument("filename")
+
+    args = parser.parse_args()
+
     ngram = NGramScore("english_trigrams.txt")
 
-    with open(sys.argv[1], "r") as f:
+    with open(args.filename, "r") as f:
         src = f.read()
 
     best_letters_map = {chr(l): chr(l) for l in range(ord("A"), ord("Z") + 1)}
