@@ -26,16 +26,45 @@ def map_letters(src: str, letters_map: dict[str, str]) -> str:
     )
 
 
-def randomly_swap_letters(letters_map: dict[str, str]):
+def randomly_swap_letters(letters_map: dict[str, str]) -> dict[str, str]:
     # swap some stuff (how many?)
     first = random_letter()
     second = random_letter()
-    letters_map = best_letters_map.copy()
     # print(letters_map)
     temp = letters_map[first]
     letters_map[first] = letters_map[second]
     letters_map[second] = temp
     return letters_map
+
+
+def decrypt_without_alphabet(text: str) -> str:
+    best_letters_map = {chr(l): chr(l) for l in range(ord("A"), ord("Z") + 1)}
+    best_score = ngram.score(map_letters(text, best_letters_map))
+    epochs = 0
+    for _ in range(MAX_EPOCHS):
+        letters_map = randomly_swap_letters(best_letters_map.copy())
+        solve = map_letters(text, letters_map)
+        score = ngram.score(solve)
+        # we sometimes need to accept suboptimal solutions to avoid converging to local maxima
+        if score > best_score or random.random() < math.exp(score - best_score):
+            best_letters_map = letters_map
+            best_score = score
+            eprint(solve)
+            eprint(f"new best scrore: {best_score}")
+        epochs += 1
+
+    alphabet = "".join(best_letters_map[chr(l)] for l in range(ord("A"), ord("Z") + 1))
+    eprint(f"decrypted with alphabet: {alphabet}")
+
+    encrypt_map = {v: k for k, v in best_letters_map.items()}
+    enc_alpha = "".join(encrypt_map[chr(l)] for l in range(ord("A"), ord("Z") + 1))
+    eprint(f"encrypted with alphabet: {enc_alpha}")
+
+    return map_letters(text, best_letters_map)
+
+
+def alphabet_to_map(alphabet: str) -> dict[str, str]:
+    return {chr(l): alphabet[i] for i, l in enumerate(range(ord("A"), ord("Z") + 1))}
 
 
 if __name__ == "__main__":
@@ -44,28 +73,17 @@ if __name__ == "__main__":
         description="attempts to decrypt a monoalphabetic cipher in a given file",
     )
     parser.add_argument("filename")
+    parser.add_argument("-a", "--alphabet", help="alphabet to map using, in A-Z order")
 
     args = parser.parse_args()
 
     ngram = NGramScore("english_trigrams.txt")
 
     with open(args.filename, "r") as f:
-        src = f.read()
+        text = f.read()
 
-    best_letters_map = {chr(l): chr(l) for l in range(ord("A"), ord("Z") + 1)}
-    best_score = ngram.score(map_letters(src, best_letters_map))
-    epochs = 0
-    for _ in range(MAX_EPOCHS):
-        letters_map = randomly_swap_letters(best_letters_map.copy())
-        solve = map_letters(src, letters_map)
-        score = ngram.score(solve)
-        # we sometimes need to accept suboptimal solutions to avoid converging to local maxima
-        if score > best_score or random.random() < math.exp(score - best_score):
-            best_letters_map = letters_map
-            best_score = score
-            epochs_since_improvement = 0
-            eprint(solve)
-            eprint(f"new best scrore: {best_score}")
-        epochs += 1
-
-    print(map_letters(src, best_letters_map))
+    if args.alphabet is not None:
+        letters_map = alphabet_to_map(args.alphabet)
+        print(map_letters(text, letters_map))
+    else:
+        print(decrypt_without_alphabet(text))

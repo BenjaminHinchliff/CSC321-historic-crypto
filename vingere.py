@@ -9,6 +9,21 @@ from ngram import NGramScore, clean_text
 
 MAX_EPOCHS_TO_IMPROVE = 10
 
+def encrypt(text: str, key: str) -> str:
+    decrypted = ""
+    i = 0
+    for l in text:
+        if l.isalpha():
+            off = ord("A") if l.isupper() else ord("a")
+            p = ord(l) - off
+            k = ord(key[i % len(key)]) - ord("A")
+            c = (p + k) % 26
+            decrypted += chr(c + off)
+            i += 1
+        else:
+            decrypted += l
+    return decrypted
+
 def decrypt(text: str, key: str) -> str:
     decrypted = ""
     i = 0
@@ -54,27 +69,8 @@ def guess_period(text: str, max_period: int) -> int:
             best_ioc = ioc
     return best_period
 
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        prog="vingere",
-        description="attempts to decrypt a vingere cipher in a given file",
-    )
-    parser.add_argument("filename")
-    parser.add_argument(
-        "-k",
-        "--max-key",
-        action="store",
-        default=20,
-        help="maximum length of the key to the vingere cipher (default: %(default)s)",
-    )
-
-    args = parser.parse_args()
-
+def decrypt_without_key(text: str) -> str:
     ngram = NGramScore("english_trigrams.txt")
-
-    with open(args.filename) as f:
-        text = f.read()
 
     key_length = guess_period(text, args.max_key)
     eprint(f"key length: {key_length}")
@@ -100,4 +96,34 @@ if __name__ == "__main__":
             break
         epochs_since_improvement += 1
 
-    print(decrypt(text, "".join(best_key)))
+    return decrypt(text, "".join(best_key))
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog="vingere",
+        description="vingere cipher in a given file",
+    )
+    parser.add_argument("filename")
+    parser.add_argument("-k", "--key", help="key to the vingere cipher")
+    parser.add_argument("-e", "--encrypt", action="store_true", help="encrypt instead of decrypt")
+    parser.add_argument(
+        "-m",
+        "--max-key",
+        type=int,
+        default=20,
+        help="maximum length of the key to the vingere cipher (default: %(default)s)",
+    )
+
+    args = parser.parse_args()
+
+    with open(args.filename) as f:
+        text = f.read()
+
+    if args.encrypt:
+        if not args.key:
+            eprint("Key required when encrypting")
+        print(encrypt(text, args.key))
+    elif args.key:
+        print(decrypt(text, args.key))
+    else:
+        print(decrypt_without_key(text))
